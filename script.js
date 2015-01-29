@@ -105,9 +105,10 @@ window.onload = function() {
 		//Step indicator onclick, set video's currentTime to the step time
 		$('.step-indicator').on('click', function(){
 			var that = this;
-			video.currentTime = that.getAttribute('data-time')
-			currentStep = that.textContent - 1;
-			isSectionEnded = true;
+			var step = that.getAttribute('data-step') -1;
+			$('.accordion a')[step].click();
+			// currentStep = that.textContent - 1;
+			// isSectionEnded = true;
 		})
 
 		//Stop when it comes to next step
@@ -152,8 +153,8 @@ window.onload = function() {
 	var appendSteps = function(array){
 		for (var i = 0; i < array.length; i++) {
 			var stepTime = array[i],
-					stepPosition = stepTime/video.duration * 100,
-					$tagSpan = $('<span class="step-indicator"/>').css('left', stepPosition + '%').text(i + 1).attr('data-time',stepTime);
+					stepPosition = stepTime/video.duration * 100 - 0.1,
+					$tagSpan = $('<span class="step-indicator"/>').css('left', stepPosition + '%').text(i + 1).attr({'data-time':stepTime, 'data-step':i+1});
 			$('.seekbar-container').append($tagSpan);
 		};
 	}
@@ -171,7 +172,10 @@ window.onload = function() {
 	var selectAccordion = function(steps){
 		$('.instruction').on('click', function(e){
 			var target = e.target.text.trim().split(' ')[1] - 1;
-			$('.step-indicator')[target].click();
+			currentStep = target;
+			isSectionEnded = true;
+			video.pause();
+			video.currentTime = steps[target];
 		})
 	}
 
