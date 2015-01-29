@@ -1,7 +1,17 @@
+.container{
+	width: 95% !important;
+	max-width: 940px;
+  min-width: 420px;
+}
+h2{
+	text-align: center;
+	font-weight: normal;
+}
 #video-container {
-	width: 640px;
-	height: 365px;
+	width: 100%;
+	height: auto;
 	position: relative;
+	margin-bottom: 10px;
 }
 
 #video-controls {
@@ -47,6 +57,12 @@ button:hover {
 	position: absolute;
 	top: calc(50% - 20px);
 	left: calc(50% - 30px);
+}
+.play.hide{
+	display: none;
+}
+#video-container:hover .play.hide{
+	display: inherit;
 }
 /* ---------------------
 	Seebar container
