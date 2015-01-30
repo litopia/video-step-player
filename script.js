@@ -5,6 +5,7 @@ window.onload = function() {
 
 	// Buttons
 	var playButton = document.getElementById("play-pause");
+	var lastStepBtn = document.getElementById('play-back');
 	var muteButton = document.getElementById("mute");
 	var fullScreenButton = document.getElementById("full-screen");
 
@@ -99,16 +100,29 @@ window.onload = function() {
 				currentStep = 1,
 				isSectionEnded = false;
 
+		$(lastStepBtn).hide();
 		//Append step indicator to the video player's time track
 		appendSteps(steps);
 
-		//Step indicator onclick, set video's currentTime to the step time
+		//Step indicator onclick, set video's currentTime to the step time.
+		//This part has the same logic with selecting an accordion
 		$('.step-indicator').on('click', function(){
 			var that = this;
 			var step = that.getAttribute('data-step') -1;
 			$('.accordion a')[step].click();
-			// currentStep = that.textContent - 1;
-			// isSectionEnded = true;
+		})
+
+		//
+		$(lastStepBtn).on('click', function(){
+			currentStep -= 1;
+			video.currentTime = steps[currentStep];
+
+			isSectionEnded = true;
+
+			var accordion = currentStep + 1;
+			toggleAccordion(accordion);
+
+			_updatePlayBtnText();
 		})
 
 		//Stop when it comes to next step
@@ -116,8 +130,9 @@ window.onload = function() {
 			for (var i = 1; i < steps.length; i++) {
 				if(Math.floor(video.currentTime) == steps[i] && currentStep == i){
 					video.pause();
-					$(playButton).text('Next Step');
+					_updatePlayBtnText();
 					isSectionEnded = true;
+					return;
 				}
 			};
 		})
@@ -129,25 +144,34 @@ window.onload = function() {
 				toggleAccordion(currentStep);
 				isSectionEnded = false;
 			}
+			$('.play-container').addClass('hide');
+			playButton.innerHTML = 'Pause';
 		})
 
 		// Show play button on video pause
 		video.addEventListener('pause', function(){
-			$(playButton).removeClass('hide');
-			if(isSectionEnded){
-				playButton.innerHTML = "Next Step"
-			}else{
-				playButton.innerHTML = 'Play';
-			}
+			$('.play-container').removeClass('hide');
+			_updatePlayBtnText();
 		})
 
-		// Hide play button on video playing
-		video.addEventListener('playing', function(){
-			$(playButton).addClass('hide');
-			playButton.innerHTML = 'Pause';
-		})
 		//Select accordion to according point of the video
-		selectAccordion(steps)
+		$('.instruction').on('click', function(e){
+			var target = e.target.text.trim().split(' ')[1] - 1;
+			currentStep = target;
+			isSectionEnded = true;
+			video.pause();
+			video.currentTime = steps[target];
+		})
+
+		function _updatePlayBtnText(){
+			if(currentStep > 0 && currentStep !== steps.length && isSectionEnded){
+				playButton.innerHTML = 'Play Next Step';
+				$(lastStepBtn).show();
+			}else{
+				playButton.innerHTML = 'Play';
+				$(lastStepBtn).hide();
+			}
+		}
 	}
 
 	var appendSteps = function(array){
@@ -166,17 +190,6 @@ window.onload = function() {
 		if(!$(accordion).hasClass('in')){
 			$(accordion).addClass('in');
 		}
-	}
-
-	//Select steps to go to the video point
-	var selectAccordion = function(steps){
-		$('.instruction').on('click', function(e){
-			var target = e.target.text.trim().split(' ')[1] - 1;
-			currentStep = target;
-			isSectionEnded = true;
-			video.pause();
-			video.currentTime = steps[target];
-		})
 	}
 
 	setupVideoPlayer();

@@ -53,15 +53,19 @@ button {
 button:hover {
 	cursor: pointer;
 }
-.play{
+.play-container{
 	position: absolute;
 	top: calc(50% - 20px);
 	left: calc(50% - 30px);
+	text-align: center;
 }
-.play.hide{
+.play{
+	display: block;
+}
+.play-container.hide{
 	display: none;
 }
-#video-container:hover .play.hide{
+#video-container:hover .play-container.hide{
 	display: inherit;
 }
 /* ---------------------
