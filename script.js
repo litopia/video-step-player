@@ -157,10 +157,11 @@ window.onload = function() {
 		// Play the video when the seek handle is dropped
 		// TODO: track the current step on handler release
 		seekBar.addEventListener("mouseup", function() {
-			console.log('mouseup: ' + seekBar.value);
 			// Calculate the new time
 			var time = video.duration * (seekBar.value / 100);
 
+			currentStep = _calculateCurrentStep(time);
+			console.log(currentStep);
 			// Update the video time
 			video.currentTime = time;
 			video.play();
@@ -186,6 +187,14 @@ window.onload = function() {
 			}
 		}
 
+		function _calculateCurrentStep(time){
+			//Calculate which step it is in
+			for (var i = steps.length - 1; i >= 0; i--) {
+				if(time > steps[i]){
+					return currentStep = i+1;
+				}
+			};
+		}
 
 	}
 
