@@ -56,36 +56,15 @@ window.onload = function() {
 	});
 
 
-	// Event listener for the seek bar
-	seekBar.addEventListener("change", function() {
-		// Calculate the new time
-		var time = video.duration * (seekBar.value / 100);
+	// // Event listener for the seek bar
+	// seekBar.addEventListener("change", function() {
+	// 	// Calculate the new time
+	// 	var time = video.duration * (seekBar.value / 100);
 
-		// Update the video time
-		video.currentTime = time;
-	});
+	// 	// Update the video time
+	// 	video.currentTime = time;
+	// });
 
-
-	// Update the seek bar as the video plays
-	video.addEventListener("timeupdate", function() {
-		// Calculate the slider value
-		var value = (100 / video.duration) * video.currentTime;
-
-		// Update the slider value
-		seekBar.value = value;
-	});
-
-
-	// Pause the video when the seek handle is being dragged
-	seekBar.addEventListener("mousedown", function() {
-		video.pause();
-	});
-
-	// Play the video when the seek handle is dropped
-	// TODO: track the current step on handler release
-	seekBar.addEventListener("mouseup", function() {
-		video.play();
-	});
 
 	// Event listener for the volume bar
 	volumeBar.addEventListener("change", function() {
@@ -125,8 +104,22 @@ window.onload = function() {
 			_updatePlayBtnText();
 		})
 
+		// Keyup enter key to pause and play video
+		document.addEventListener('keyup', function(e){
+			if(e.keyCode === 32){
+				video.paused ? video.play():video.pause();
+			}
+		})
 		//Stop when it comes to next step
 		video.addEventListener('timeupdate', function(){
+			// Update the seek bar as the video plays
+
+			// Calculate the slider value
+			var value = (100 / video.duration) * video.currentTime;
+
+			// Update the slider value
+			seekBar.value = value;
+
 			for (var i = 1; i < steps.length; i++) {
 				if(Math.floor(video.currentTime) == steps[i] && currentStep == i){
 					video.pause();
@@ -152,7 +145,27 @@ window.onload = function() {
 		video.addEventListener('pause', function(){
 			$('.play-container').removeClass('hide');
 			_updatePlayBtnText();
+
 		})
+
+		// Pause the video when the seek handle is being dragged
+		seekBar.addEventListener("mousedown", function() {
+			video.pause();
+			$(video).unbind('timeupdate');
+		});
+
+		// Play the video when the seek handle is dropped
+		// TODO: track the current step on handler release
+		seekBar.addEventListener("mouseup", function() {
+			console.log('mouseup: ' + seekBar.value);
+			// Calculate the new time
+			var time = video.duration * (seekBar.value / 100);
+
+			// Update the video time
+			video.currentTime = time;
+			video.play();
+			$(video).bind('timeupdate');
+		});
 
 		//Select accordion to according point of the video
 		$('.instruction').on('click', function(e){
@@ -172,6 +185,8 @@ window.onload = function() {
 				$(lastStepBtn).hide();
 			}
 		}
+
+
 	}
 
 	var appendSteps = function(array){
