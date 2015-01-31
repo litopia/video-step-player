@@ -56,16 +56,6 @@ window.onload = function() {
 	});
 
 
-	// // Event listener for the seek bar
-	// seekBar.addEventListener("change", function() {
-	// 	// Calculate the new time
-	// 	var time = video.duration * (seekBar.value / 100);
-
-	// 	// Update the video time
-	// 	video.currentTime = time;
-	// });
-
-
 	// Event listener for the volume bar
 	volumeBar.addEventListener("change", function() {
 		// Update the video volume
@@ -124,8 +114,7 @@ window.onload = function() {
 				if(Math.floor(video.currentTime) == steps[i] && currentStep == i){
 					video.pause();
 					_updatePlayBtnText();
-					isSectionEnded = true;
-					return;
+					return isSectionEnded = true;
 				}
 			};
 		})
@@ -134,38 +123,35 @@ window.onload = function() {
 		video.addEventListener('play', function(){
 			if(isSectionEnded){
 				currentStep ++;
-				toggleAccordion(currentStep);
 				isSectionEnded = false;
+			}else{
+				_calculateCurrentStep(video.currentTime);
+				console.log(currentStep);
 			}
 			$('.play-container').addClass('hide');
 			playButton.innerHTML = 'Pause';
+			toggleAccordion(currentStep);
 		})
 
 		// Show play button on video pause
 		video.addEventListener('pause', function(){
 			$('.play-container').removeClass('hide');
 			_updatePlayBtnText();
-
 		})
 
 		// Pause the video when the seek handle is being dragged
 		seekBar.addEventListener("mousedown", function() {
 			video.pause();
-			$(video).unbind('timeupdate');
 		});
 
 		// Play the video when the seek handle is dropped
-		// TODO: track the current step on handler release
 		seekBar.addEventListener("mouseup", function() {
 			// Calculate the new time
 			var time = video.duration * (seekBar.value / 100);
 
-			currentStep = _calculateCurrentStep(time);
-			console.log(currentStep);
 			// Update the video time
 			video.currentTime = time;
 			video.play();
-			$(video).bind('timeupdate');
 		});
 
 		//Select accordion to according point of the video
@@ -175,6 +161,7 @@ window.onload = function() {
 			isSectionEnded = true;
 			video.pause();
 			video.currentTime = steps[target];
+			toggleAccordion(currentStep);
 		})
 
 		function _updatePlayBtnText(){
@@ -189,11 +176,16 @@ window.onload = function() {
 
 		function _calculateCurrentStep(time){
 			//Calculate which step it is in
-			for (var i = steps.length - 1; i >= 0; i--) {
-				if(time > steps[i]){
-					return currentStep = i+1;
+			if(video.currentTime !== 0){
+				for (var i = steps.length - 1; i >= 0; i--) {
+					if(time > steps[i]){
+						return currentStep = i+1;
+					}
 				}
-			};
+			}
+			else{
+				return currentStep = 1;
+			}
 		}
 
 	}
@@ -210,14 +202,54 @@ window.onload = function() {
 	//Toggle accordion with the according step
 	var toggleAccordion = function(step){
 		var accordion = $('.collapse')[step -1];
-		$('.collapse').not(accordion).removeClass('in');
+		$('.collapse').not(accordion).each(function(){
+			var that = $(this);
+			if(that.hasClass('in')){
+				$(this).collapse('hide');
+			}
+		});
 		if(!$(accordion).hasClass('in')){
-			$(accordion).addClass('in');
+			$(accordion).collapse('show');
 		}
 	}
 
 	setupVideoPlayer();
 }
 
+// !function ($) {
+// 	"use strict";
 
+// 	/* STEP PLAYER PUBLIC CLASS DEFINITION
+// 	 * =================================== */
+
+// 	var StepPlayer = function(element, options){
+// 		this.element = element;
+// 	}
+
+// 	StepPlayer.prototype = {
+// 		constructor: StepPlayer,
+// 		setup: function(){
+// 			// Detect video player
+
+// 			// Append video controller with step widgets
+
+// 			// Establish relationship with the collapse sections
+// 		},
+// 		createVideoController: function(){
+
+// 		}
+// 	}
+
+// 	/* STEP PLAYER PLUGIN DEFINITION
+// 	 * ============================= */
+
+// 	 var old = $.fn.stepplayer;
+
+// 	 $.fn.stepplayer = function(option){
+// 	 	return this.each(function(){
+// 	 		var $this = $(this),
+
+// 	 	})
+// 	 }
+// }(window.jQuery);
 
