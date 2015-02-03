@@ -1,0 +1,22 @@
+{
+  "name": "video step player",
+  "version": "0.1.0",
+  "homepage": "https://github.com/litopia/video-step-player",
+  "authors": [
+    "litopia <litopia.li@gmail.com>"
+  ],
+  "description": "Plugin for video.js to play video step by step with content toggler",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "~3.3.2",
+    "videojs": "~4.11.4"
+  }
+}
