@@ -1,0 +1,16 @@
+.vjs-stepplayer{
+
+}
+
+.vjs-stepplayer .vjs-big-play-button{
+	left: calc(50% - 60px);
+	top: calc(50% - 53px);
+}
+
+.vjs-stepplayer .vjs-tip{
+	width: 15px;
+	height: auto;
+	bottom: 0;
+	position: absolute;
+	background-color: orange;
+}
