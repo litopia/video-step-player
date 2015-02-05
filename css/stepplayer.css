@@ -7,10 +7,18 @@
 	top: calc(50% - 53px);
 }
 
+.vjs-stepplayer.vjs-has-started .vjs-big-play-button:after{
+	content: attr(data-content);
+	font-size: 14px;
+	text-transform: capitalize;
+	position: relative;
+	top: 54%;
+}
 .vjs-stepplayer .vjs-tip{
 	width: 15px;
 	height: auto;
 	bottom: 0;
 	position: absolute;
 	background-color: orange;
+	cursor: pointer;
 }
