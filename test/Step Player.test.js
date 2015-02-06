@@ -44,7 +44,7 @@
       player = videojs(video);
 
       // initialize the plugin with the default options
-      player.StepPlayer();
+      player.stepplayer(steps: [{time: 0}]);
     },
     teardown: function() {
       videojs.Html5.isSupported = realIsHtmlSupported;
@@ -52,6 +52,6 @@
   });
 
   test('registers itself', function() {
-    ok(player.StepPlayer, 'registered the plugin');
+    ok(player.stepplayer, 'registered the plugin');
   });
 })(window, window.videojs, window.QUnit);
